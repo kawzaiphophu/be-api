@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>API Documentation</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+
+<body>
+    <div class="container mt-5 bg-light p-5">
+        <h1>API Documentation</h1>
+        <h2>Endpoints</h2>
+        <h3>Get All Users</h3>
+        <p>GET /users</p>
+        <p>Get all users in the database.</p>
+        <span>Example : <a href="http://localhost:3001/users">/users</a></span>
+        <hr>
+        <h3>Get User by ID/NAME/EMAIL/COUNTRY/BLOOD_GROUP</h3>
+        <p>GET /users/:...</p>
+        <p>Get user</p>
+        <span>Example : <a href="http://localhost:3001/user/1">/users/1</a></span>
+        <hr>
+        <h3>Get User by PHONE NUMBER</h3>
+        <p>GET /users/PHONE/...</p>
+        <p>Get user by phone number length = 10</p>
+        <span>Example : <a href="http://localhost:3001/user/phone/2345678901">/users/phone/2345678901</a></span>
+        <hr>
+        <h3>Get User by CARD ID</h3>
+        <p>GET /users/PHONE/...</p>
+        <p>Get user by card id length = 13</p>
+        <span>Example : <a href="http://localhost:3001/user/idcard/3456789012345">/users/idcard/3456789012345</a></span>
+        <hr>
+        <h3>POST New User</h3>
+        <p>POST /add</p>
+        <p>Add a new user to the database.</p>
+        <span>Example:</span>
+
+        <form id="addUserForm">
+            <div class="mb-3">
+                <label for="username" class="form-label">Username</label>
+                <input type="text" class="form-control" id="username" placeholder="Enter username"
+                    value="Kaw Zaiphophu">
+            </div>
+            <div class="mb-3">
+                <label for="email" class="form-label">Email address</label>
+                <input type="email" class="form-control" id="email" placeholder="Enter email" value="Test@gmail.co">
+            </div>
+            <div class="mb-3">
+                <label for="phone" class="form-label">Phone</label>
+                <input type="tel" class="form-control" id="phone" placeholder="Enter phone" value="0984657823">
+            </div>
+            <div class="mb-3">
+                <label for="userIdCard" class="form-label">User ID Card</label>
+                <input type="text" class="form-control" id="userIdCard" placeholder="Enter user ID card"
+                    value="1985838134832">
+            </div>
+            <div class="mb-3">
+                <label for="country" class="form-label">Country</label>
+                <input type="text" class="form-control" id="country" placeholder="Enter country" value="Thailand">
+            </div>
+            <div class="mb-3">
+                <label for="birthDay" class="form-label">Birth Day</label>
+                <input type="date" class="form-control" id="birthDay" value="1999-05-29">
+            </div>
+            <div class="mb-3">
+                <label for="bloodGroup" class="form-label">Blood Group</label>
+                <input type="text" class="form-control" id="bloodGroup" placeholder="Enter blood group" value="O">
+            </div>
+            <div class="mb-3">
+                <label for="nation" class="form-label">Nation</label>
+                <input type="text" class="form-control" id="nation" placeholder="Enter nation" value="Thai">
+            </div>
+            <button type="submit" class="btn btn-primary">Add New User</button>
+            <div id="addUserResponse"></div>
+        </form>
+        <hr>
+        <h3>Delete User</h3>
+        <p>Delete /user/:id</p>
+        <p>Delete user by ID</p>
+        <span>Example:</span>
+        <div id="deleteUserResponse"></div>
+        <label for="userIdToDelete">Enter User ID to Delete:</label>
+        <input type="text" id="userIdToDelete" class="form-control" placeholder="User ID">
+        <button id="deleteUserBtn" class="btn btn-danger mt-2">Delete User</button>
+        <hr>
+        <h3>Patch Update User</h3>
+        <p>Patch Update /user/:id</p>
+        <p>Patch Update user by ID</p>
+        <span>Example:</span>
+        <div id="updateUserResponse"></div>
+        <form id="updateUserForm">
+            <div class="mb-3">
+                <label for="userId" class="form-label">User ID</label>
+                <input type="number" class="form-control" id="userId" placeholder="Enter user ID">
+            </div>
+            <div class="mb-3">
+                <label for="email" class="form-label">New Email address</label>
+                <input type="email" class="form-control" id="email" placeholder="Enter email">
+            </div>
+            <button type="submit" class="btn btn-primary">Update User Data</button>
+        </form>
+
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        document.getElementById('addUserForm').addEventListener('submit', function (event) {
+            event.preventDefault();
+
+            const formData = {
+                username: document.getElementById('username').value,
+                email: document.getElementById('email').value,
+                phone: document.getElementById('phone').value,
+                user_id_card: document.getElementById('userIdCard').value,
+                country: document.getElementById('country').value,
+                birth_day: document.getElementById('birthDay').value,
+                blood_group: document.getElementById('bloodGroup').value,
+                nation: document.getElementById('nation').value
+            };
+
+            fetch('/add', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(formData)
+            })
+                .then(response => response.json())
+                .then(data => {
+                    document.getElementById('addUserResponse').innerHTML = JSON.stringify(data, null, 2);
+                })
+                .catch(error => console.error('Error adding user:', error));
+        });
+    </script>
+    <script>
+        document.getElementById('deleteUserBtn').addEventListener('click', function () {
+            const userIdToDelete = document.getElementById('userIdToDelete').value.trim();
+            if (userIdToDelete !== '' && confirm(`Are you sure you want to delete user with ID ${userIdToDelete}?`)) {
+                fetch(`/user/${userIdToDelete}`, {
+                    method: 'DELETE'
+                })
+                    .then(response => response.json())
+                    .then(data => {
+                        document.getElementById('deleteUserResponse').innerHTML = JSON.stringify(data, null, 2);
+                    })
+                    .catch(error => console.error('Error deleting user:', error));
+            }
+        });
+    </script>
+    <script>
+        document.getElementById('updateUserForm').addEventListener('submit', function (event) {
+            event.preventDefault();
+            const userId = document.getElementById('userId').value;
+            const email = document.getElementById('email').value;
+
+            fetch(`/user/${userId}`, {
+                method: 'PATCH',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ email: email })
+            })
+                .then(response => response.json())
+                .then(data => {
+                    document.getElementById('updateUserResponse').innerHTML = JSON.stringify(data, null, 2);
+                })
+                .catch(error => console.error('Error updating user:', error));
+        });
+    </script>
+
+</body>
+
+</html>
