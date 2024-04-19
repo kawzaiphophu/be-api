@@ -17,14 +17,16 @@ app.set('view engine', 'ejs');
 app.use(express.json());
 app.use(router);
 
-myDataSource
-    .initialize()
-    .then(() => {
-        console.log("Data Source initialized!");
-    })
-    .catch((err: Error) => {
-        console.error("Error initializing data source:", err);
-    });
+async function connectDatabase() {
+    try {
+        await myDataSource.initialize();
+        console.log("Data Source Connected!");
+    } catch (err) {
+        console.error("Error Connect data source:", err);
+    }
+}
+
+connectDatabase();
 
 app.get('/', async (req: Request, res: Response) => {
     try {
