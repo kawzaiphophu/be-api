@@ -4,6 +4,17 @@ import UserSchema from '../config/userSchema';
 
 const router: Router = express.Router();
 
+// Main APi
+router.get('/', async (req: Request, res: Response) => {
+    try {
+        const userRepository = myDataSource.getRepository(UserSchema);
+        const users = await userRepository.find();
+        res.render('home', { users });
+    } catch (error: unknown) {
+        console.error('Error retrieving users:', error);
+        res.status(500).json({ error: 'Internal server error' });
+    }
+});
 // Find all users
 router.get('/users', async (req: Request, res: Response) => {
     try {
