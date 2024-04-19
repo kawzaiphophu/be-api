@@ -1,10 +1,7 @@
 import express, { Request, Response } from 'express';
 import path from 'path';
-import dotenv from 'dotenv';
 import { myDataSource } from './src/config/dataSource';
 import router from './src/route/router';
-
-dotenv.config();
 
 const app = express();
 const PORT = 3001;
