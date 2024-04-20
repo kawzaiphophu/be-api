@@ -7,11 +7,7 @@ const router: Router = express.Router();
 // Main APi
 router.get('/', async (req: Request, res: Response) => {
     try {
-        console.log('Attempting to retrieve users...');
-        const userRepository = myDataSource.getRepository(UserSchema);
-        const users = await userRepository.find();
-        console.log('Users retrieved successfully:', users);
-        res.render('home', { users });
+        res.render('home');
     } catch (error: unknown) {
         console.error('Error retrieving users:', error);
         res.status(500).json({ error: 'Internal server error' });
