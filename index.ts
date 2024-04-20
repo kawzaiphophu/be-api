@@ -1,15 +1,7 @@
-import express, { Request, Response } from 'express';
+import express from 'express';
 import path from 'path';
 import { myDataSource } from './src/config/dataSource';
 import router from './src/route/router';
-
-const app = express();
-const PORT = 3001;
-
-app.set('views', path.join(__dirname, './src/views'));
-app.set('view engine', 'ejs');
-app.use(express.json());
-app.use(router);
 
 async function connectDatabase() {
     try {
@@ -20,6 +12,15 @@ async function connectDatabase() {
     }
 }
 connectDatabase();
+
+const app = express();
+const PORT = 3001;
+
+app.set('views', path.join(__dirname, './src/views'));
+app.set('view engine', 'ejs');
+app.use(express.json());
+app.use(router);
+
 app.listen(PORT, () => {
     console.log(`Server listening on port ${PORT}`);
 });
